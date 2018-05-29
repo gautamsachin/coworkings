@@ -1,0 +1,8 @@
+/dist
+/node_modules
+/*debug.log*
+/.idea
+/.vscode
+/logs
+/space_images
+/space_images_temp
