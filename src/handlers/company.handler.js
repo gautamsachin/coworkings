@@ -1,7 +1,8 @@
 var route = require('../utils').route,
     spaceRepository = require('../repositories').space,
     ObjectId = require('mongoose').Types.ObjectId,
-    fileHandler = require('../handlers/file.handler');
+    fileHandler = require('../handlers/file.handler')
+    ;
 
 function _listRoute() {
     return route.createPromiseRoute(async function (req, res) {
@@ -11,7 +12,7 @@ function _listRoute() {
         let lng = parseFloat(req.query.lng, 10).toFixed(6);
         let sort = req.query.sort || '';
         let order = req.query.order || 1;
-        //why the sort is in array
+        //why the sort is in ar
         let sortParam = sort ? { [sort]: order } : {};
         // concept of this lat and lng 
         lat = /^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,6})?))$/.test(lat) ? lat : null;
@@ -21,7 +22,7 @@ function _listRoute() {
         var spaceList = await spaceRepository.findByLocation(lat, lng, skip, limit, sortParam);
         var dd = _getDistance(lat, lng, spaceList);
         return { count: spaceCount, spaces: dd };
-    });
+    }); 
 }
 
 function _createSpace() {
@@ -36,6 +37,7 @@ function _createSpace() {
 function _getDistance(lat, lng, spaces) {
     if (lat && lng) {
         return spaces.map(space => {
+            // why is it set to the document directly
             space._doc.distanceUnit = 'km';
             space._doc.distanceFromUser = distance(lat, lng, space.address_lat, space.address_lng, space.distanceUnit);
             return space
@@ -83,6 +85,8 @@ function distance(lat1, lon1, lat2, lon2, unit) {
     dist = dist * 60 * 1.1515
     if (unit == "km") { dist = dist * 1.609344 }
     if (unit == "mi") { dist = dist * 0.8684 }
+    // calculate using npm 
+    //console.log(distanceCalculator(lat1,lon1,lat2,lon2))
     return dist.toFixed(2);
 }
 
